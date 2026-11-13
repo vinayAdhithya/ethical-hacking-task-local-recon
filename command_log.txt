@@ -1,0 +1,176 @@
+================================================================================
+LOCAL RECONNAISSANCE AND ATTACK SURFACE MAP - COMMAND EXECUTION LOG
+================================================================================
+Target: 127.0.0.1:3000 (OWASP Juice Shop Local Lab)
+Tester: Security Engineering Intern
+Testing Date: 2026-11-12
+Host OS: Windows 11 (Build 10.0.26200)
+Scope: Authorized Local Loopback Interface (127.0.0.1:3000) Only
+================================================================================
+
+[2026-11-12 20:08:11 IST] - Host Environment & Capability Audit
+Command:
+  python --version; nmap --version; docker --version
+Purpose:
+  Inspect host operating system for required reconnaissance tools and runtimes.
+Output / Results:
+  Python 3.12.6 [INSTALLED]
+  nmap: Command not found [UNAVAILABLE]
+  docker: Command not found [UNAVAILABLE]
+Notes / Limitations:
+  Docker Desktop and Nmap are not installed in standard system paths. Native Node.js deployment selected.
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:19:36 IST] - Official Target Package Retrieval
+Command:
+  curl.exe -L -o juice-shop-20.4.0_node22_win32_x64.zip "https://github.com/juice-shop/juice-shop/releases/download/v20.4.0/juice-shop-20.4.0_node22_win32_x64.zip"
+Purpose:
+  Retrieve official pre-built OWASP Juice Shop release corresponding to Node.js v22 on Windows x64.
+Output / Results:
+  HTTP 200 OK. Downloaded 128.6 MB archive. Exit Code: 0.
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:20:08 IST] - Archive Extraction & Filesystem Integrity
+Command:
+  python -c "import zipfile; zipfile.ZipFile('juice-shop-20.4.0_node22_win32_x64.zip').extractall('juice-shop')"
+Purpose:
+  Extract official application files and pre-bundled dependencies into local lab workspace.
+Output / Results:
+  Extracted 44,680 files into 'juice-shop/juice-shop_20.4.0-SNAPSHOT'. Extraction successful.
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:27:41 IST] - Strict Loopback Interface Binding Enforcement
+Command:
+  python scratch/configure_bind.py
+Purpose:
+  Patch server listener from default wildcard (0.0.0.0) strictly to '127.0.0.1' on TCP port 3000 to eliminate public network exposure.
+Output / Results:
+  server.listen(port, '127.0.0.1', () => { ... }) successfully enforced.
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:28:09 IST] - Application Service Initialization
+Command:
+  cd juice-shop\juice-shop_20.4.0-SNAPSHOT; $env:PORT = "3000"; node build/app.js
+Purpose:
+  Launch OWASP Juice Shop daemon bound exclusively to 127.0.0.1:3000.
+Output / Results:
+  Application started in background daemon mode.
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:29:45 IST] - Local Target Socket Verification
+Command:
+  python -c "import socket; s = socket.socket(); print(s.connect_ex(('127.0.0.1', 3000)))"
+Purpose:
+  Verify TCP port 3000 listener on loopback adapter.
+Output / Results:
+  Return code: 0 (Socket connection accepted).
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:30:00 IST] - HTTP Service & Application Identity Verification
+Command:
+  curl.exe -i -s http://127.0.0.1:3000/
+Purpose:
+  Verify HTTP response status, application title, and initial headers.
+Output / Results:
+  HTTP/1.1 200 OK
+  Title: OWASP Juice Shop
+  Access-Control-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Feature-Policy: payment 'self'
+  X-Recruiting: /#/jobs
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:33:14 IST] - Baseline Evidence Screenshot Capture
+Command:
+  msedge.exe --headless --disable-gpu --window-size=1280,900 --screenshot="Local_Reconnaissance_Attack_Surface_Map\evidence\01_juice_shop_homepage.png" http://127.0.0.1:3000/#/
+Purpose:
+  Capture genuine visual proof of running OWASP Juice Shop target application.
+Output / Results:
+  Saved evidence file: Local_Reconnaissance_Attack_Surface_Map/evidence/01_juice_shop_homepage.png (29,906 bytes).
+================================================================================
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:38:46 IST] - Phase 4: Local Port & Service Enumeration
+Command:
+  python scratch/execute_recon.py (Target: 127.0.0.1 across ports 1-1024, 1337, 3000, 3306, 5000, 5432, 8000, 8080, 8443, 9000, 27017)
+Purpose:
+  Perform conservative TCP connect port scan, service banner grabbing, and reachability verification against 127.0.0.1.
+Output / Results:
+  - 127.0.0.1:3000 [OPEN] - Service: http (OWASP Juice Shop / Node.js Express) - Banner: HTTP/1.1 200 OK
+  - 127.0.0.1:135  [OPEN] - Service: msrpc (Windows RPC Endpoint Mapper)
+  - 127.0.0.1:445  [OPEN] - Service: microsoft-ds (Windows SMB)
+  - 127.0.0.1:27017 [OPEN] - Service: mongodb / local dev listener
+  - All other scanned ports [CLOSED/FILTERED]
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:39:15 IST] - Phase 4: HTTP Header & Security Header Inspection
+Command:
+  python scratch/execute_recon.py (Target: http://127.0.0.1:3000/)
+Purpose:
+  Capture HTTP response headers and inspect presence/absence of critical defensive headers.
+Output / Results:
+  HTTP Status: 200 OK
+  Access-Control-Allow-Origin: * [PERMISSIVE WILDCARD]
+  X-Content-Type-Options: nosniff [PRESENT]
+  X-Frame-Options: SAMEORIGIN [PRESENT]
+  Feature-Policy: payment 'self' [DEPRECATED DIRECTIVE]
+  X-Recruiting: /#/jobs [INFORMATION DISCLOSURE]
+  Content-Security-Policy: [NOT PRESENT - VULNERABILITY FACTOR]
+  Strict-Transport-Security: [NOT PRESENT]
+  Referrer-Policy: [NOT PRESENT]
+  Permissions-Policy: [NOT PRESENT]
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:39:30 IST] - Phase 4: Application Route & Endpoint Enumeration
+Command:
+  python scratch/execute_recon.py (Target: http://127.0.0.1:3000/ across 19 candidate paths)
+Purpose:
+  Identify accessible single-page application routes, documentation endpoints, and REST APIs.
+Output / Results:
+  - / (HTTP 200) - Web Root
+  - /#/login (HTTP 200) - User Authentication Interface
+  - /#/register (HTTP 200) - User Registration Interface
+  - /#/contact (HTTP 200) - Customer Feedback Form
+  - /#/search (HTTP 200) - Product Catalog Search
+  - /#/score-board (HTTP 200) - Gamified Challenge Progress Dashboard
+  - /#/about (HTTP 200) - Information Page
+  - /#/photo-wall (HTTP 200) - Community Photo Gallery
+  - /api-docs/ (HTTP 200) - Interactive Swagger OpenAPI UI
+  - /api-docs/swagger.json (HTTP 200) - Raw OpenAPI 3.0 API Schema
+  - /ftp (HTTP 200) - Exposed Directory Listing / File Repository
+  - /metrics (HTTP 200) - Unauthenticated Prometheus Telemetry Endpoint
+  - /rest/products/search?q= (HTTP 200) - Public REST Search Query
+  - /rest/captcha (HTTP 200) - Mathematical CAPTCHA Challenge Service
+  - /api/Users (HTTP 401) - Protected User Management API
+  - /api/Cards (HTTP 401) - Protected Payment Card API
+  - /rest/basket/1 (HTTP 401) - Protected Shopping Cart API
+
+--------------------------------------------------------------------------------
+
+[2026-11-12 20:40:14 IST] - Phase 4: Systematic Visual Evidence Capture
+Command:
+  python scratch/capture_evidence_screenshots.py
+Purpose:
+  Capture genuine visual screenshot evidence across all discovered views using headless browser automation.
+Output / Results:
+  - evidence/01_juice_shop_homepage.png (29,906 bytes)
+  - evidence/02_juice_shop_login.png (62,128 bytes)
+  - evidence/03_juice_shop_registration.png (55,972 bytes)
+  - evidence/04_juice_shop_contact_feedback.png (43,062 bytes)
+  - evidence/05_juice_shop_search_interface.png (29,640 bytes)
+  - evidence/06_juice_shop_swagger_api_docs.png (38,416 bytes)
+  - evidence/07_juice_shop_ftp_directory.png (30,115 bytes)
+  - evidence/08_juice_shop_metrics_endpoint.png (74,307 bytes)
+  All 8 visual evidence artifacts verified and archived.
+================================================================================

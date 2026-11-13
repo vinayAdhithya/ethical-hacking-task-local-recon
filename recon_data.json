@@ -1,0 +1,341 @@
+{
+  "target": {
+    "ip": "127.0.0.1",
+    "hostname": "localhost",
+    "port": 3000,
+    "url": "http://127.0.0.1:3000",
+    "timestamp": "2026-11-12T20:39:32.900307",
+    "reachability": true
+  },
+  "port_scan": [
+    {
+      "port": 135,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "unknown",
+      "banner": "No banner returned (TCP handshake completed)"
+    },
+    {
+      "port": 445,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "unknown",
+      "banner": "No banner returned (TCP handshake completed)"
+    },
+    {
+      "port": 3000,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "http (OWASP Juice Shop / Node.js Express)",
+      "banner": "HTTP/1.1 200 OK"
+    },
+    {
+      "port": 27017,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "unknown",
+      "banner": "No banner returned (TCP handshake completed)"
+    }
+  ],
+  "http_headers": {
+    "Access-Control-Allow-Origin": "*",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Feature-Policy": "payment 'self'",
+    "X-Recruiting": "/#/jobs",
+    "Accept-Ranges": "bytes",
+    "Cache-Control": "public, max-age=0",
+    "Last-Modified": "Thu, 12 Nov 2026 14:55:37 GMT",
+    "ETag": "W/\"2721-1a1d041d3ce\"",
+    "Content-Type": "text/html; charset=UTF-8",
+    "Content-Length": "10017",
+    "Vary": "Accept-Encoding",
+    "Date": "Thu, 12 Nov 2026 15:09:50 GMT",
+    "Connection": "close"
+  },
+  "security_headers": {
+    "Content-Security-Policy": {
+      "present": false,
+      "value": null,
+      "purpose": "CSP",
+      "assessment": "Missing security header: Content-Security-Policy"
+    },
+    "X-Frame-Options": {
+      "present": true,
+      "value": "SAMEORIGIN",
+      "purpose": "Clickjacking protection",
+      "assessment": "Header present - check configuration"
+    },
+    "X-Content-Type-Options": {
+      "present": true,
+      "value": "nosniff",
+      "purpose": "MIME-sniffing protection",
+      "assessment": "Header present - check configuration"
+    },
+    "Strict-Transport-Security": {
+      "present": false,
+      "value": null,
+      "purpose": "HSTS",
+      "assessment": "Missing security header: Strict-Transport-Security"
+    },
+    "Referrer-Policy": {
+      "present": false,
+      "value": null,
+      "purpose": "Referrer leakage protection",
+      "assessment": "Missing security header: Referrer-Policy"
+    },
+    "Permissions-Policy": {
+      "present": false,
+      "value": null,
+      "purpose": "Feature/API restriction",
+      "assessment": "Missing security header: Permissions-Policy"
+    },
+    "Access-Control-Allow-Origin": {
+      "present": true,
+      "value": "*",
+      "purpose": "CORS policy",
+      "assessment": "Header present - check configuration"
+    },
+    "X-Recruiting": {
+      "present": true,
+      "value": "/#/jobs",
+      "purpose": "Custom header / recruitment link",
+      "assessment": "Header present - check configuration"
+    }
+  },
+  "routes": [
+    {
+      "endpoint": "/",
+      "url": "http://127.0.0.1:3000/",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "Web Root"
+    },
+    {
+      "endpoint": "/#/login",
+      "url": "http://127.0.0.1:3000/#/login",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "User Login Interface"
+    },
+    {
+      "endpoint": "/#/register",
+      "url": "http://127.0.0.1:3000/#/register",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "User Registration Interface"
+    },
+    {
+      "endpoint": "/#/contact",
+      "url": "http://127.0.0.1:3000/#/contact",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "Customer Feedback Form"
+    },
+    {
+      "endpoint": "/#/search",
+      "url": "http://127.0.0.1:3000/#/search",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "Product Search View"
+    },
+    {
+      "endpoint": "/#/score-board",
+      "url": "http://127.0.0.1:3000/#/score-board",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "Security Score Board"
+    },
+    {
+      "endpoint": "/#/about",
+      "url": "http://127.0.0.1:3000/#/about",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "About Us Information Page"
+    },
+    {
+      "endpoint": "/#/photo-wall",
+      "url": "http://127.0.0.1:3000/#/photo-wall",
+      "method": "GET (SPA)",
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "description": "Photo Wall Gallery"
+    },
+    {
+      "endpoint": "/api-docs/",
+      "url": "http://127.0.0.1:3000/api-docs/",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "description": "Swagger OpenAPI UI Documentation"
+    },
+    {
+      "endpoint": "/api-docs/swagger.json",
+      "url": "http://127.0.0.1:3000/api-docs/swagger.json",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "description": "Swagger API Specification (JSON)"
+    },
+    {
+      "endpoint": "/rest/products/search?q=",
+      "url": "http://127.0.0.1:3000/rest/products/search?q=",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "description": "Product Search API"
+    },
+    {
+      "endpoint": "/api/Users",
+      "url": "http://127.0.0.1:3000/api/Users",
+      "method": "GET",
+      "status_code": 401,
+      "content_type": "text/html; charset=utf-8",
+      "description": "User Management API Endpoint"
+    },
+    {
+      "endpoint": "/api/Cards",
+      "url": "http://127.0.0.1:3000/api/Cards",
+      "method": "GET",
+      "status_code": 401,
+      "content_type": "application/json; charset=utf-8",
+      "description": "Payment Card Management Endpoint"
+    },
+    {
+      "endpoint": "/rest/basket/1",
+      "url": "http://127.0.0.1:3000/rest/basket/1",
+      "method": "GET",
+      "status_code": 401,
+      "content_type": "text/html; charset=utf-8",
+      "description": "User Shopping Basket API"
+    },
+    {
+      "endpoint": "/rest/captcha",
+      "url": "http://127.0.0.1:3000/rest/captcha",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "application/json; charset=utf-8",
+      "description": "CAPTCHA Challenge API"
+    },
+    {
+      "endpoint": "/ftp",
+      "url": "http://127.0.0.1:3000/ftp",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "description": "Exposed FTP / Directory Listing Route"
+    },
+    {
+      "endpoint": "/metrics",
+      "url": "http://127.0.0.1:3000/metrics",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "text/plain; version=0.0.4; charset=utf-8",
+      "description": "Prometheus Metrics Endpoint"
+    },
+    {
+      "endpoint": "/assets/public/favicon_js.ico",
+      "url": "http://127.0.0.1:3000/assets/public/favicon_js.ico",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "image/x-icon",
+      "description": "Application Favicon Resource"
+    },
+    {
+      "endpoint": "/assets/public/images/JuiceShop_Logo.png",
+      "url": "http://127.0.0.1:3000/assets/public/images/JuiceShop_Logo.png",
+      "method": "GET",
+      "status_code": 200,
+      "content_type": "image/png",
+      "description": "Application Branding Asset"
+    }
+  ],
+  "inputs": [
+    {
+      "component": "Search Bar",
+      "route": "/#/search",
+      "input_name": "q / searchParam",
+      "input_type": "text",
+      "purpose": "Product catalog search query",
+      "visibility": "Publicly visible on application top navigation",
+      "potential_risk": "SQL Injection, Reflected Cross-Site Scripting (XSS)",
+      "risk_level": "High",
+      "recommendation": "Use parameterized ORM queries, sanitize and HTML-encode search term reflection."
+    },
+    {
+      "component": "Login Form",
+      "route": "/#/login",
+      "input_name": "email",
+      "input_type": "email",
+      "purpose": "User account authentication identifier",
+      "visibility": "Public authentication page",
+      "potential_risk": "Authentication bypass, SQL injection, Account enumeration",
+      "risk_level": "High",
+      "recommendation": "Implement prepared SQL statements, rate-limiting on failed attempts, generic auth error messages."
+    },
+    {
+      "component": "Login Form",
+      "route": "/#/login",
+      "input_name": "password",
+      "input_type": "password",
+      "purpose": "User account authentication secret",
+      "visibility": "Public authentication page",
+      "potential_risk": "Credential brute-forcing, weak password acceptance",
+      "risk_level": "Medium",
+      "recommendation": "Enforce strong password policy, bcrypt/argon2 hashing, lockout mechanisms."
+    },
+    {
+      "component": "Registration Form",
+      "route": "/#/register",
+      "input_name": "email, password, repeatPassword, securityQuestion, securityAnswer",
+      "input_type": "form (multi-field)",
+      "purpose": "New user self-registration",
+      "visibility": "Public registration interface",
+      "potential_risk": "Account creation abuse, insecure security questions, mass assignment",
+      "risk_level": "Medium",
+      "recommendation": "Enforce CAPTCHA on registration, strict DTO schema validation, multi-factor authentication."
+    },
+    {
+      "component": "Customer Feedback Form",
+      "route": "/#/contact",
+      "input_name": "Author / UserId, comment, rating, captchaResult",
+      "input_type": "form (textarea, slider, text)",
+      "purpose": "Submitting user feedback and ratings",
+      "visibility": "Public feedback page",
+      "potential_risk": "Stored Cross-Site Scripting (XSS), CAPTCHA bypass, SPAM submission",
+      "risk_level": "High",
+      "recommendation": "Sanitize comments on server-side using DOMPurify, validate CAPTCHA server-side before persisting."
+    },
+    {
+      "component": "Photo Wall Upload",
+      "route": "/#/photo-wall",
+      "input_name": "file, caption",
+      "input_type": "file upload (multipart/form-data)",
+      "purpose": "Uploading user photos to photo gallery",
+      "visibility": "Authenticated user interface",
+      "potential_risk": "Unrestricted file upload, Remote Code Execution (RCE), Path Traversal",
+      "risk_level": "High",
+      "recommendation": "Validate file extension and MIME type via magic bytes, store files outside webroot with randomized names."
+    },
+    {
+      "component": "File Upload / Complaint Form",
+      "route": "/#/complain",
+      "input_name": "message, file",
+      "input_type": "file upload & textarea",
+      "purpose": "Submitting customer complaints with supporting invoice/files",
+      "visibility": "Authenticated interface",
+      "potential_risk": "Malicious file upload, XXE injection via XML/PDF parser",
+      "risk_level": "High",
+      "recommendation": "Disable external entity processing in parsers, scan uploaded files, isolate storage."
+    }
+  ],
+  "observations": [],
+  "http_status": 200
+}

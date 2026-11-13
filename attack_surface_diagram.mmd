@@ -1,0 +1,86 @@
+graph TD
+    %% Base Target Architecture
+    subgraph Target_Environment ["Target Environment: Local Loopback"]
+        Target["Authorized Target Host<br/><b>127.0.0.1 (localhost)</b>"]
+        
+        subgraph Host_Services ["Local Windows System Services (Out of Target Scope)"]
+            RPC["TCP 135: msrpc<br/>(Windows RPC Endpoint Mapper)"]
+            SMB["TCP 445: microsoft-ds<br/>(Windows SMB File Sharing)"]
+            MONGO["TCP 27017: local-dev<br/>(Local MongoDB Listener)"]
+        end
+
+        subgraph InScope_Target ["In-Scope Authorized Lab Service"]
+            JuiceShop["TCP Port 3000: HTTP<br/><b>OWASP Juice Shop v20.4.0</b><br/>(Node.js v22 / Express / SQLite3)"]
+        end
+    end
+
+    Target --> Host_Services
+    Target --> InScope_Target
+
+    %% Web Application Attack Surface
+    subgraph Web_Attack_Surface ["Exposed Web Application Surface (Port 3000)"]
+        Headers["HTTP Response Headers<br/>• X-Frame-Options: SAMEORIGIN<br/>• X-Content-Type-Options: nosniff<br/>• Access-Control-Allow-Origin: *<br/>• Feature-Policy: payment 'self'<br/>• X-Recruiting: /#/jobs"]
+
+        subgraph Routes ["Accessible Routes & Endpoints"]
+            R_Public["Public UI Routes<br/>• / (Homepage)<br/>• /#/login (Auth)<br/>• /#/register (Account)<br/>• /#/search (Catalog)<br/>• /#/contact (Feedback)<br/>• /#/photo-wall (Gallery)"]
+            R_Sensitive["Exposed Internal Endpoints<br/>• /api-docs/ (Swagger UI)<br/>• /api-docs/swagger.json (Schema)<br/>• /ftp (Directory Listing)<br/>• /metrics (Prometheus Telemetry)"]
+            R_API["Protected REST APIs<br/>• /api/Users (401)<br/>• /api/Cards (401)<br/>• /rest/basket/1 (401)"]
+        end
+
+        subgraph Inputs ["Visible Interactive Input Fields"]
+            IN_Search["Search Parameter: ?q="]
+            IN_Auth["Login: email, password"]
+            IN_Reg["Registration: email, password, security questions"]
+            IN_Feedback["Feedback: comment, rating, captchaResult"]
+            IN_Upload["Upload: photo-wall & complain files"]
+        end
+    end
+
+    JuiceShop --> Headers
+    JuiceShop --> Routes
+    JuiceShop --> Inputs
+
+    %% Potential Security Risks
+    subgraph Risks ["Identified Potential Security Risks"]
+        RSK_001["<b>RSK-001 (High)</b><br/>Missing Content-Security-Policy (CSP)"]
+        RSK_002["<b>RSK-002 (High)</b><br/>Public Directory Listing (/ftp) & File Exposure"]
+        RSK_003["<b>RSK-003 (High)</b><br/>Unrestricted File Upload on Photo Wall / Complaints"]
+        RSK_004["<b>RSK-004 (Medium)</b><br/>Exposed Swagger UI & OpenAPI Schema (/api-docs/)"]
+        RSK_005["<b>RSK-005 (Medium)</b><br/>Unauthenticated Prometheus Telemetry (/metrics)"]
+        RSK_006["<b>RSK-006 (Medium)</b><br/>Permissive CORS Configuration (Wildcard Origin)"]
+    end
+
+    Headers -.-> RSK_001
+    Headers -.-> RSK_006
+    R_Sensitive -.-> RSK_002
+    R_Sensitive -.-> RSK_004
+    R_Sensitive -.-> RSK_005
+    IN_Upload -.-> RSK_003
+    IN_Search -.-> RSK_001
+
+    %% Recommended Controls
+    subgraph Controls ["Recommended Security Mitigations"]
+        SEC_Headers["Deploy Strict Defense-in-Depth Headers<br/>(Strict CSP, HSTS, Referrer-Policy, Whitelist CORS)"]
+        SEC_Access["Enforce Access Controls & Network ACLs<br/>(Disable /ftp directory browsing, protect /api-docs and /metrics)"]
+        SEC_Sanitize["Rigorous Input Validation & Sanitization<br/>(ORM Parameterization, DOMPurify context encoding)"]
+        SEC_Upload["Secure Multipart File Handling<br/>(Magic-byte validation, non-executable storage, random filenames)"]
+    end
+
+    RSK_001 ==> SEC_Headers
+    RSK_006 ==> SEC_Headers
+    RSK_002 ==> SEC_Access
+    RSK_004 ==> SEC_Access
+    RSK_005 ==> SEC_Access
+    RSK_003 ==> SEC_Upload
+
+    %% Styling
+    classDef targetStyle fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#ffffff;
+    classDef appStyle fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#ffffff;
+    classDef riskStyle fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#ffffff;
+    classDef controlStyle fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#ffffff;
+    classDef hostStyle fill:#334155,stroke:#64748b,stroke-width:1px,color:#e2e8f0;
+
+    class Target,JuiceShop appStyle;
+    class RPC,SMB,MONGO hostStyle;
+    class RSK_001,RSK_002,RSK_003,RSK_004,RSK_005,RSK_006 riskStyle;
+    class SEC_Headers,SEC_Access,SEC_Sanitize,SEC_Upload controlStyle;

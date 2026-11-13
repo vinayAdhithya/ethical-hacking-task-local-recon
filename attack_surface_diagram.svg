@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" style="background:#0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="gradTarget" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gradHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="gradRiskHigh" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+    <linearGradient id="gradRiskMed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="gradControl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="40" y="25" width="1120" height="70" rx="12" fill="url(#gradHeader)" filter="url(#shadow)"/>
+  <text x="60" y="60" fill="#ffffff" font-size="22" font-weight="bold">LOCAL RECONNAISSANCE &amp; ATTACK SURFACE ARCHITECTURE MAP</text>
+  <text x="60" y="82" fill="#e0e7ff" font-size="13">Target: 127.0.0.1:3000 (OWASP Juice Shop v20.4.0) | Scope: Authorized Local Loopback Assessment</text>
+
+  <!-- Target Core Box -->
+  <rect x="40" y="115" width="340" height="340" rx="12" fill="url(#gradTarget)" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="40" y="115" width="340" height="36" rx="12" fill="#1e3a8a"/>
+  <text x="55" y="139" fill="#93c5fd" font-size="14" font-weight="bold">🎯 TARGET IDENTIFICATION</text>
+  
+  <text x="55" y="175" fill="#f8fafc" font-size="13" font-weight="bold">Host: 127.0.0.1 (localhost)</text>
+  <text x="55" y="195" fill="#94a3b8" font-size="12">Interface: IPv4 Loopback Adapter</text>
+  
+  <rect x="55" y="215" width="310" height="60" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="68" y="238" fill="#34d399" font-size="12" font-weight="bold">AUTHORIZED LAB TARGET (TCP 3000)</text>
+  <text x="68" y="258" fill="#cbd5e1" font-size="11">OWASP Juice Shop (Node.js/Express/SQLite3)</text>
+  
+  <rect x="55" y="290" width="310" height="145" rx="8" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+  <text x="68" y="312" fill="#cbd5e1" font-size="11" font-weight="bold">HOST SERVICES (OUT OF TARGET SCOPE):</text>
+  <text x="68" y="335" fill="#94a3b8" font-size="11">• TCP 135: msrpc (Windows RPC Mapper)</text>
+  <text x="68" y="355" fill="#94a3b8" font-size="11">• TCP 445: microsoft-ds (Windows SMB)</text>
+  <text x="68" y="375" fill="#94a3b8" font-size="11">• TCP 27017: local-dev (MongoDB Listener)</text>
+  <text x="68" y="405" fill="#64748b" font-size="10" font-style="italic">Separated from target scope per ROE</text>
+
+  <!-- Web Attack Surface Box -->
+  <rect x="420" y="115" width="400" height="340" rx="12" fill="url(#gradTarget)" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="420" y="115" width="400" height="36" rx="12" fill="#581c87"/>
+  <text x="435" y="139" fill="#d8b4fe" font-size="14" font-weight="bold">🌐 EXPOSED WEB ATTACK SURFACE</text>
+
+  <text x="435" y="172" fill="#c084fc" font-size="12" font-weight="bold">HTTP Response Headers:</text>
+  <text x="435" y="190" fill="#cbd5e1" font-size="11">• X-Frame-Options: SAMEORIGIN (Present)</text>
+  <text x="435" y="206" fill="#cbd5e1" font-size="11">• X-Content-Type-Options: nosniff (Present)</text>
+  <text x="435" y="222" fill="#f87171" font-size="11">• CSP &amp; HSTS: MISSING (Vulnerability factor)</text>
+  <text x="435" y="238" fill="#fbbf24" font-size="11">• Access-Control-Allow-Origin: * (Permissive)</text>
+
+  <text x="435" y="265" fill="#c084fc" font-size="12" font-weight="bold">Discovered Sensitive Routes:</text>
+  <text x="435" y="283" fill="#cbd5e1" font-size="11">• /api-docs/ &amp; /api-docs/swagger.json (Exposed UI)</text>
+  <text x="435" y="299" fill="#cbd5e1" font-size="11">• /ftp (Public Browseable Directory Listing)</text>
+  <text x="435" y="315" fill="#cbd5e1" font-size="11">• /metrics (Unauthenticated Prometheus Data)</text>
+
+  <text x="435" y="342" fill="#c084fc" font-size="12" font-weight="bold">Visible Form &amp; Input Fields:</text>
+  <text x="435" y="360" fill="#cbd5e1" font-size="11">• Search Bar (?q=) | Auth: Login &amp; Register</text>
+  <text x="435" y="376" fill="#cbd5e1" font-size="11">• Customer Feedback (UserId, comment, rating)</text>
+  <text x="435" y="392" fill="#cbd5e1" font-size="11">• Multipart Uploads: Photo Wall &amp; Complaints</text>
+
+  <!-- Risk Assessment Box -->
+  <rect x="860" y="115" width="300" height="340" rx="12" fill="url(#gradTarget)" stroke="#ef4444" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="860" y="115" width="300" height="36" rx="12" fill="#991b1b"/>
+  <text x="875" y="139" fill="#fca5a5" font-size="14" font-weight="bold">⚠️ IDENTIFIED SECURITY RISKS</text>
+
+  <rect x="875" y="165" width="270" height="40" rx="6" fill="url(#gradRiskHigh)" stroke="#ef4444" stroke-width="1"/>
+  <text x="885" y="182" fill="#ffffff" font-size="11" font-weight="bold">RSK-001 (High): Missing CSP</text>
+  <text x="885" y="197" fill="#fca5a5" font-size="10">High client-side XSS susceptibility</text>
+
+  <rect x="875" y="213" width="270" height="40" rx="6" fill="url(#gradRiskHigh)" stroke="#ef4444" stroke-width="1"/>
+  <text x="885" y="230" fill="#ffffff" font-size="11" font-weight="bold">RSK-002 (High): Public /ftp Listing</text>
+  <text x="885" y="245" fill="#fca5a5" font-size="10">Directory traversal &amp; sensitive leakage</text>
+
+  <rect x="875" y="261" width="270" height="40" rx="6" fill="url(#gradRiskHigh)" stroke="#ef4444" stroke-width="1"/>
+  <text x="885" y="278" fill="#ffffff" font-size="11" font-weight="bold">RSK-003 (High): File Uploads</text>
+  <text x="885" y="293" fill="#fca5a5" font-size="10">Potential arbitrary file / XXE risk</text>
+
+  <rect x="875" y="309" width="270" height="40" rx="6" fill="url(#gradRiskMed)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="885" y="326" fill="#ffffff" font-size="11" font-weight="bold">RSK-004 (Med): Exposed /api-docs/</text>
+  <text x="885" y="341" fill="#fde68a" font-size="10">Complete API catalog disclosed</text>
+
+  <rect x="875" y="357" width="270" height="40" rx="6" fill="url(#gradRiskMed)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="885" y="374" fill="#ffffff" font-size="11" font-weight="bold">RSK-005 (Med): /metrics Telemetry</text>
+  <text x="885" y="389" fill="#fde68a" font-size="10">Runtime memory &amp; stats exposed</text>
+
+  <rect x="875" y="405" width="270" height="40" rx="6" fill="url(#gradRiskMed)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="885" y="422" fill="#ffffff" font-size="11" font-weight="bold">RSK-006 (Med): Permissive CORS</text>
+  <text x="885" y="437" fill="#fde68a" font-size="10">Wildcard cross-origin read risk</text>
+
+  <!-- Connective Arrows & Lines -->
+  <path d="M 380 245 L 420 245" stroke="#3b82f6" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 820 245 L 860 245" stroke="#8b5cf6" stroke-width="3" fill="none"/>
+
+  <!-- Recommended Security Mitigations Banner -->
+  <rect x="40" y="485" width="1120" height="380" rx="12" fill="url(#gradTarget)" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="40" y="485" width="1120" height="36" rx="12" fill="#065f46"/>
+  <text x="55" y="509" fill="#a7f3d0" font-size="14" font-weight="bold">🛡️ RECOMMENDED SECURITY CONTROLS &amp; MITIGATION ARCHITECTURE</text>
+
+  <!-- Control Box 1 -->
+  <rect x="65" y="540" width="250" height="300" rx="8" fill="url(#gradControl)" stroke="#10b981" stroke-width="1.5"/>
+  <text x="80" y="570" fill="#34d399" font-size="13" font-weight="bold">1. Security Headers</text>
+  <text x="80" y="600" fill="#e2e8f0" font-size="11" font-weight="bold">Mitigates: RSK-001, RSK-006</text>
+  <text x="80" y="625" fill="#cbd5e1" font-size="11">• Deploy Strict CSP:</text>
+  <text x="90" y="642" fill="#94a3b8" font-size="10">default-src 'self'</text>
+  <text x="80" y="665" fill="#cbd5e1" font-size="11">• Restrict CORS:</text>
+  <text x="90" y="682" fill="#94a3b8" font-size="10">Replace '*' with whitelist</text>
+  <text x="80" y="705" fill="#cbd5e1" font-size="11">• Enforce HSTS:</text>
+  <text x="90" y="722" fill="#94a3b8" font-size="10">max-age=31536000</text>
+  <text x="80" y="745" fill="#cbd5e1" font-size="11">• Referrer-Policy:</text>
+  <text x="90" y="762" fill="#94a3b8" font-size="10">strict-origin-when-cross-origin</text>
+
+  <!-- Control Box 2 -->
+  <rect x="340" y="540" width="250" height="300" rx="8" fill="url(#gradControl)" stroke="#10b981" stroke-width="1.5"/>
+  <text x="355" y="570" fill="#34d399" font-size="13" font-weight="bold">2. Access Control</text>
+  <text x="355" y="600" fill="#e2e8f0" font-size="11" font-weight="bold">Mitigates: RSK-002, RSK-004</text>
+  <text x="355" y="625" fill="#cbd5e1" font-size="11">• Disable Directory Listing:</text>
+  <text x="365" y="642" fill="#94a3b8" font-size="10">Disable serve-index on /ftp</text>
+  <text x="355" y="665" fill="#cbd5e1" font-size="11">• Protect /api-docs/:</text>
+  <text x="365" y="682" fill="#94a3b8" font-size="10">Restrict to Dev / Authenticated</text>
+  <text x="355" y="705" fill="#cbd5e1" font-size="11">• Role-Based Permissions:</text>
+  <text x="365" y="722" fill="#94a3b8" font-size="10">Admin tokens for schema access</text>
+  <text x="355" y="745" fill="#cbd5e1" font-size="11">• Path Normalization:</text>
+  <text x="365" y="762" fill="#94a3b8" font-size="10">Prevent dot-dot-slash traversal</text>
+
+  <!-- Control Box 3 -->
+  <rect x="615" y="540" width="250" height="300" rx="8" fill="url(#gradControl)" stroke="#10b981" stroke-width="1.5"/>
+  <text x="630" y="570" fill="#34d399" font-size="13" font-weight="bold">3. Input Validation</text>
+  <text x="630" y="600" fill="#e2e8f0" font-size="11" font-weight="bold">Mitigates: Search &amp; Form Risks</text>
+  <text x="630" y="625" fill="#cbd5e1" font-size="11">• ORM Parameterization:</text>
+  <text x="640" y="642" fill="#94a3b8" font-size="10">Prepared statements in SQLite</text>
+  <text x="630" y="665" fill="#cbd5e1" font-size="11">• Contextual Output Encoding:</text>
+  <text x="640" y="682" fill="#94a3b8" font-size="10">DOMPurify for rendered text</text>
+  <text x="630" y="705" fill="#cbd5e1" font-size="11">• Rate Limiting:</text>
+  <text x="640" y="722" fill="#94a3b8" font-size="10">Throttle /rest/user/login</text>
+  <text x="630" y="745" fill="#cbd5e1" font-size="11">• Strict Type Validation:</text>
+  <text x="640" y="762" fill="#94a3b8" font-size="10">DTO schemas on registration</text>
+
+  <!-- Control Box 4 -->
+  <rect x="890" y="540" width="250" height="300" rx="8" fill="url(#gradControl)" stroke="#10b981" stroke-width="1.5"/>
+  <text x="905" y="570" fill="#34d399" font-size="13" font-weight="bold">4. Secure File Handling</text>
+  <text x="905" y="600" fill="#e2e8f0" font-size="11" font-weight="bold">Mitigates: RSK-003, RSK-005</text>
+  <text x="905" y="625" fill="#cbd5e1" font-size="11">• Magic-Byte Inspection:</text>
+  <text x="915" y="642" fill="#94a3b8" font-size="10">Validate file binary headers</text>
+  <text x="905" y="665" fill="#cbd5e1" font-size="11">• Out-of-Root Storage:</text>
+  <text x="915" y="682" fill="#94a3b8" font-size="10">Store outside webroot</text>
+  <text x="905" y="705" fill="#cbd5e1" font-size="11">• Random UUID Filenames:</text>
+  <text x="915" y="722" fill="#94a3b8" font-size="10">Prevent direct script execution</text>
+  <text x="905" y="745" fill="#cbd5e1" font-size="11">• Metric Network ACLs:</text>
+  <text x="915" y="762" fill="#94a3b8" font-size="10">Firewall /metrics endpoint</text>
+</svg>
